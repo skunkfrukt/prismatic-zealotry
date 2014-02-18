@@ -40,9 +40,3 @@ class PluckyLassView(object):
         elif self.model.direction == 'W':
             self.image = self.grid[6]
         self.sprite.image = self.image
-        if self.model.hue == 'R':
-            self.sprite.color = (255, 0, 0)
-        if self.model.hue == 'G':
-            self.sprite.color = (0, 255, 0)
-        if self.model.hue == 'B':
-            self.sprite.color = (0, 0, 255)
