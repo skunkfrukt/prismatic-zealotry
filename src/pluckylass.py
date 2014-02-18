@@ -23,7 +23,7 @@ class PluckyLass(object):
 class PluckyLassView(object):
     def __init__(self, model):
         self.model = model
-        self.grid = pyglet.image.ImageGrid(pyglet.resource.image('basictiles.png'), 15, 8)[32:40]
+        self.grid = pyglet.image.ImageGrid(pyglet.resource.image('editor_dudes.png'), 6, 3)[2:3]
         self.image = self.grid[0]
 
     def setup(self):
@@ -32,11 +32,11 @@ class PluckyLassView(object):
     def vupdate(self, screen_offset):
         self.sprite.position = self.model.position * 15 + screen_offset
         if self.model.direction == 'N':
-            self.image = self.grid[4]
+            self.image = self.grid[0]
         elif self.model.direction == 'E':
-            self.image = self.grid[2]
+            self.image = self.grid[0]
         elif self.model.direction == 'S':
             self.image = self.grid[0]
         elif self.model.direction == 'W':
-            self.image = self.grid[6]
+            self.image = self.grid[0]
         self.sprite.image = self.image
