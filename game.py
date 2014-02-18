@@ -50,14 +50,17 @@ def mupdate(dt):
     # Update hue map
     # Match 3
     player.mupdate(dt)
-    col, row = player.position + player.delta
-    if not testmap.obstacle_at(col, row):
-        player.position += player.delta
-    elif testmap.tile_at(col, row).pushable and not testmap.obstacle_at(*(player.position + player.delta * 2)):
-        testmap.shift_tile(col, row, player.delta)
-        player.position += player.delta
-        testmap.update_hue_map()
-        testmap.match_3(col + player.delta.x, row + player.delta.y)
+    player_next_pos = player.position + player.delta
+    if not testmap.obstacle_at(*player_next_pos):
+        player.position = player_next_pos
+    elif testmap.tile_at(*player_next_pos).pushable:
+        block_next_pos = player_next_pos + player.delta
+        if (not testmap.obstacle_at(*block_next_pos)) and testmap.same_chunk(
+                player_next_pos, block_next_pos):
+            testmap.shift_tile(player_next_pos[0], player_next_pos[1], player.delta)
+            player.position = player_next_pos
+            testmap.update_hue_map()
+            testmap.match_3(*block_next_pos)
 
 def vupdate(dt):
     chunk_x = (player.position.x // 13) * 15 * 13

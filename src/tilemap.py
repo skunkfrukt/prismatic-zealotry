@@ -248,6 +248,15 @@ class TileMap(object):
         self.tile_at(col, row).dead = True
         self.put_tile_at(None, col, row)
 
+    def same_chunk(self, *coords):
+        first_chunk = self.chunk_at(*coords[0])
+        for coord in coords[1:]:
+            if self.chunk_at(*coord) != first_chunk:
+                return False
+        return True
+
+    def chunk_at(self, col, row):
+        return col // 13, row // 13
 
 class Tile(object):
     def __init__(self, x, y, **kwargs):
