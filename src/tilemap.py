@@ -210,7 +210,25 @@ class TileMap(object):
                     self.hue_map[(col, row)] = None
 
     def match_3(self, col, row):
-        pass  # TODO: This.
+        visited = set()
+        unvisited = [(col, row)]
+        first_hue = self.hue_map[(col, row)]
+        while len(unvisited) > 0:
+            current = unvisited.pop()
+            visited.add(current)
+            x, y = current
+            if x > 0 and self.hue_map[(x - 1, y)] == first_hue and (x - 1, y) not in visited:
+                unvisited.append((x - 1, y))
+            if x < self.width - 1 and self.hue_map[(x + 1, y)] == first_hue and (x + 1, y) not in visited:
+                unvisited.append((x + 1, y))
+            if y > 0 and self.hue_map[(x, y - 1)] == first_hue and (x, y - 1) not in visited:
+                unvisited.append((x, y - 1))
+            if y < self.height - 1 and self.hue_map[(x, y + 1)] == first_hue and (x, y + 1) not in visited:
+                unvisited.append((x, y + 1))
+        if len(visited) >= 3:
+            print 'Matched', len(visited)
+            for c, r in visited:
+                self.destroy_tile(c, r)
 
     def shift_tile(self, col, row, delta):
         from_pos = Vect(col, row)
@@ -226,6 +244,10 @@ class TileMap(object):
         if tile is not None:
             tile.position = Vect(col, row)
 
+    def destroy_tile(self, col, row):
+        self.tile_at(col, row).dead = True
+        self.put_tile_at(None, col, row)
+
 
 class Tile(object):
     def __init__(self, x, y, **kwargs):
@@ -233,6 +255,7 @@ class Tile(object):
         self.hue = kwargs.get('hue', None)
         self.pushable = kwargs.get('pushable', False)
         self.obstacle = True
+        self.dead = False
 
 
 class TileMapView(object):
@@ -270,7 +293,10 @@ class TileMapView(object):
 
     def update_sprite_position(self, offset):
         for spr in self.sprites:
-            spr.position = spr.model.position * self.model.tilewidth + offset
+            if spr.model.dead:
+                spr.visible = False
+            else:
+                spr.position = spr.model.position * self.model.tilewidth + offset
 
 
 class TileLayer(object):

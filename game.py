@@ -56,7 +56,8 @@ def mupdate(dt):
     elif testmap.tile_at(col, row).pushable and not testmap.obstacle_at(*(player.position + player.delta * 2)):
         testmap.shift_tile(col, row, player.delta)
         player.position += player.delta
-    testmap.update_hue_map()
+        testmap.update_hue_map()
+        testmap.match_3(col + player.delta.x, row + player.delta.y)
 
 def vupdate(dt):
     chunk_x = (player.position.x // 13) * 15 * 13
